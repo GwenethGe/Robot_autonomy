@@ -1,0 +1,18 @@
+sudo apt update
+sudo apt install git cmake libssl-dev libusb-1.0-0-dev pkg-config \
+                 libgtk-3-dev libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev
+
+git clone https://github.com/IntelRealSense/librealsense.git
+cd librealsense
+mkdir build && cd build
+cmake .. -DBUILD_PYTHON_BINDINGS=ON -DBUILD_EXAMPLES=OFF
+make -j$(nproc)
+sudo make install
+
+cd wrappers/python
+pip install .
+
+python3 -c "import pyrealsense2 as rs; print(rs.__doc__)"
+python3 -c "import pyrealsense2 as rs; print([d.get_info(rs.camera_info.serial_number) for d in rs.context().devices])"
+
+pip install pyrealsense2
